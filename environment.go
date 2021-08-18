@@ -3,6 +3,7 @@ package env
 import (
 	"fmt"
 	"os"
+    "strconv"
 )
 
 func GetMandatoryEnv(envName string) string {
@@ -23,4 +24,26 @@ func GetDefaultEnv(envName, defaultValue string) string {
 	}
 
 	return env
+}
+
+func GetMandatoryIntFromEnv(envName string) int {
+    value := GetMandatoryEnv(envName)
+
+    intVal, err := strconv.Atoi(value)
+    if err != nil {
+        panic(err)
+    }
+
+	return intVal
+}
+
+func GetDefaultIntFromEnv(envName, defaultValue string) int {
+    value := GetDefaultEnv(envName, defaultValue)
+
+    intVal, err := strconv.Atoi(value)
+    if err != nil {
+        panic(err)
+    }
+
+	return intVal
 }
