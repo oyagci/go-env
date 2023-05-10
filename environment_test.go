@@ -113,3 +113,77 @@ func TestGetMandatoryDurationFromEnv(t *testing.T) {
 		assert.Equal(t, 10*time.Hour, env.GetMandatoryDurationFromEnv("test_env"))
 	})
 }
+
+func TestGetDefaultBoolFromEnv(t *testing.T) {
+	defer os.Unsetenv("test_env")
+
+	t.Run("env not set", func(t *testing.T) {
+		assert.True(t, env.GetDefaultBoolFromEnv("test_env", true))
+		assert.False(t, env.GetDefaultBoolFromEnv("test_env", false))
+	})
+
+	t.Run("invalid value from env", func(t *testing.T) {
+		defer os.Unsetenv("test_env")
+
+		assert.NoError(t, os.Setenv("test_env", "invalid"))
+		assert.Panics(t, func() { env.GetDefaultBoolFromEnv("test_env", true) })
+	})
+
+	t.Run("env set", func(t *testing.T) {
+		t.Run("true with default false", func(t *testing.T) {
+			trueValues := []string{
+				"1", "t", "T", "TRUE", "true", "True",
+			}
+
+			for _, value := range trueValues {
+				assert.NoError(t, os.Setenv("test_env", value))
+				assert.True(t, env.GetDefaultBoolFromEnv("test_env", false))
+			}
+		})
+
+		t.Run("false with default true", func(t *testing.T) {
+			falseValues := []string{
+				"0", "f", "F", "FALSE", "false", "False",
+			}
+
+			for _, value := range falseValues {
+				assert.NoError(t, os.Setenv("test_env", value))
+				assert.False(t, env.GetDefaultBoolFromEnv("test_env", true))
+			}
+		})
+	})
+}
+func TestGetMandatoryBoolFromEnv(t *testing.T) {
+	defer os.Unsetenv("test_env")
+
+	t.Run("invalid value", func(t *testing.T) {
+		defer os.Unsetenv("test_env")
+
+		assert.NoError(t, os.Setenv("test_env", "invalid"))
+		assert.Panics(t, func() { env.GetMandatoryBoolFromEnv("test_env") })
+	})
+
+	t.Run("env set", func(t *testing.T) {
+		t.Run("true", func(t *testing.T) {
+			trueValues := []string{
+				"1", "t", "T", "TRUE", "true", "True",
+			}
+
+			for _, value := range trueValues {
+				assert.NoError(t, os.Setenv("test_env", value))
+				assert.True(t, env.GetMandatoryBoolFromEnv("test_env"))
+			}
+		})
+
+		t.Run("false", func(t *testing.T) {
+			falseValues := []string{
+				"0", "f", "F", "FALSE", "false", "False",
+			}
+
+			for _, value := range falseValues {
+				assert.NoError(t, os.Setenv("test_env", value))
+				assert.False(t, env.GetMandatoryBoolFromEnv("test_env"))
+			}
+		})
+	})
+}

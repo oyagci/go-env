@@ -66,3 +66,24 @@ func GetDefaultDurationFromEnv(duration, defaultDuration string) time.Duration {
 	}
 	return d
 }
+
+func GetMandatoryBoolFromEnv(name string) bool {
+	value := GetMandatoryEnv(name)
+
+	return mustParseBool(value)
+}
+
+func GetDefaultBoolFromEnv(name string, defaultValue bool) bool {
+	value := GetDefaultEnv(name, strconv.FormatBool(defaultValue))
+
+	return mustParseBool(value)
+}
+
+func mustParseBool(value string) bool {
+	b, err := strconv.ParseBool(value)
+	if err != nil {
+		panic(err)
+	}
+
+	return b
+}
