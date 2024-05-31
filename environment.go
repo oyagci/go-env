@@ -87,3 +87,47 @@ func mustParseBool(value string) bool {
 
 	return b
 }
+
+func GetDefaultFloat32FromEnv(envName string, defaultValue string) float32 {
+	value := GetDefaultEnv(envName, defaultValue)
+
+	floatVal, err := strconv.ParseFloat(value, 32)
+	if err != nil {
+		panic(err)
+	}
+
+	return float32(floatVal)
+}
+
+func GetMandatoryFloat32FromEnv(envName string) float32 {
+	value := GetMandatoryEnv(envName)
+
+	floatVal, err := strconv.ParseFloat(value, 32)
+	if err != nil {
+		panic(err)
+	}
+
+	return float32(floatVal)
+}
+
+func GetDefaultFloat64FromEnv(envName string, defaultValue string) float64 {
+	value := GetDefaultEnv(envName, defaultValue)
+
+	floatVal, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		panic(err)
+	}
+
+	return floatVal
+}
+
+func GetMandatoryFloat64FromEnv(envName string) float64 {
+	value := GetMandatoryEnv(envName)
+
+	floatVal, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		panic(err)
+	}
+
+	return floatVal
+}
